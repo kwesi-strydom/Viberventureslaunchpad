@@ -23,7 +23,7 @@ See [docs/spec.md](docs/spec.md) for the architecture, schema and build order.
 
 ## Status
 
-Pre-build. First target event: **Fri 16 Oct 2026** (online qualifier the week before).
+Scaffold in progress (schema, event clock, scheduler logic, health endpoint). First target event: **Fri 16 Oct 2026** (online qualifier the week before).
 
 ## Neon database setup (run on your own computer)
 
@@ -43,3 +43,24 @@ neon deploy
 
 `neon.ts` is already in the repo with an empty config (`defineConfig({})`).
 Never commit database URLs or API keys. Use `.env` locally (it is git-ignored).
+
+## Running it locally
+
+```bash
+git pull
+npm install
+npm test            # engine unit tests, no database needed
+npm run check       # typecheck
+npm run db:migrate  # applies drizzle/*.sql to the Neon branch in .env.local
+npm run dev         # http://localhost:5000/api/health
+```
+
+`.env.local` holds your database URLs and is git-ignored. Use a **Neon dev branch** for
+experiments, not `production`, once real participants exist.
+
+## Layout
+
+- `src/db/schema.ts`: all tables (see docs/spec.md section 5)
+- `src/engine/clock.ts`, `schedule.ts`: event clock and "what is due now" logic, with tests
+- `src/server/`: Express app (health check only so far)
+- `drizzle/`: generated SQL migrations. Review them before applying.
