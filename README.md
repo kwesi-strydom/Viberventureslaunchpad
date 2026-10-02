@@ -52,7 +52,7 @@ npm install
 npm test            # engine unit tests, no database needed
 npm run check       # typecheck
 npm run db:migrate  # applies drizzle/*.sql to the Neon branch in .env.local
-npm run dev         # http://localhost:5000/api/health
+npm run dev         # http://localhost:5001/api/health
 ```
 
 `.env.local` holds your database URLs and is git-ignored. Use a **Neon dev branch** for
