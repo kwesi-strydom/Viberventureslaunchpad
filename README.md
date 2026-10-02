@@ -62,5 +62,18 @@ experiments, not `production`, once real participants exist.
 
 - `src/db/schema.ts`: all tables (see docs/spec.md section 5)
 - `src/engine/clock.ts`, `schedule.ts`: event clock and "what is due now" logic, with tests
-- `src/server/`: Express app (health check only so far)
+- `src/server/`: Express app (`app.ts`), GitHub login and sessions (`auth/`)
 - `drizzle/`: generated SQL migrations. Review them before applying.
+
+## GitHub login
+
+1. GitHub → Settings → Developer settings → OAuth Apps → New OAuth App.
+   Homepage `http://localhost:5001`, callback `http://localhost:5001/api/auth/github/callback`.
+2. Put these in `.env.local` (never in git): `GITHUB_CLIENT_ID`, `GITHUB_CLIENT_SECRET`,
+   and `ADMIN_GITHUB_HANDLES=your-github-handle` to become an admin.
+3. `npm run dev`, then open http://localhost:5001/api/auth/github to sign in and
+   http://localhost:5001/api/auth/me to see who you are.
+
+Security notes: sessions are random tokens stored hashed, cookies are HttpOnly + SameSite=Lax
+(+ Secure on https), the OAuth `state` is a per-login nonce, writes require our own Origin, and
+GitHub accounts younger than `MIN_GITHUB_ACCOUNT_AGE_DAYS` (default 14) are refused.
